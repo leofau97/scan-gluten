@@ -819,7 +819,12 @@ async function analyzeWithAI(barcode, imageBase64, mediaType) {
 async function fetchOpenFoodFacts(barcode) {
   try {
     const resp = await fetch(
-      `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`
+      `https://world.openfoodfacts.org/api/v2/product/${barcode}?fields=product_name,brands,ingredients_text,allergens,labels`,
+      {
+        headers: {
+          'User-Agent': 'CeliacScan/1.0 (https://scan-gluten.vercel.app)'
+        }
+      }
     );
     const data = await resp.json();
     if (data.status === 1) {
