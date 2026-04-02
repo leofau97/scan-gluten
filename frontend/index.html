@@ -30,10 +30,8 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    overflow-x: hidden;
   }
 
-  /* Grid background */
   body::before {
     content: '';
     position: fixed;
@@ -46,7 +44,6 @@
     z-index: 0;
   }
 
-  /* Glow top */
   body::after {
     content: '';
     position: fixed;
@@ -60,7 +57,6 @@
     z-index: 0;
   }
 
-  /* Header */
   header {
     position: relative;
     z-index: 10;
@@ -71,108 +67,39 @@
     border-bottom: 1px solid var(--border);
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
+  .logo { display: flex; align-items: center; gap: 0.75rem; }
 
   .logo-mark {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     border: 2px solid var(--accent);
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 1rem;
     box-shadow: 0 0 12px rgba(0,255,136,0.3);
   }
 
-  .logo-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-
+  .logo-name { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; }
   .logo-name span { color: var(--accent); }
 
-  .status-dot {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
+  .status-dot { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px var(--accent);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* Tabs */
-  .tabs {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .tab {
-    flex: 1;
-    padding: 1rem;
-    background: none;
-    border: none;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text-dim);
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    transition: all 0.2s;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-  }
-
-  .tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
+  .tabs { position: relative; z-index: 10; display: flex; border-bottom: 1px solid var(--border); }
+  .tab { flex: 1; padding: 1rem; background: none; border: none; font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--text-dim); cursor: pointer; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab:hover:not(.active) { color: var(--text); }
 
-  /* Main */
-  .main {
-    position: relative;
-    z-index: 10;
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
-  }
-
+  .main { position: relative; z-index: 10; max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem; }
   .panel { display: none; }
   .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  .section-header { margin-bottom: 1.5rem; }
+  .section-header h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.3rem; }
+  .section-header p { font-size: 0.82rem; color: var(--text-dim); }
 
-  /* Scanner panel */
+  /* Scanner */
   .scan-zone {
     border: 2px dashed var(--border);
     border-radius: 16px;
@@ -184,418 +111,89 @@
     overflow: hidden;
     margin-bottom: 1.5rem;
   }
+  .scan-zone::before { content:''; position:absolute; inset:0; background:var(--accent-dim); opacity:0; transition:opacity 0.25s; }
+  .scan-zone:hover { border-color:var(--accent); box-shadow:0 0 30px rgba(0,255,136,0.1); }
+  .scan-zone:hover::before { opacity:1; }
+  .scan-icon { font-size:3.5rem; margin-bottom:1rem; display:block; filter:drop-shadow(0 0 10px rgba(0,255,136,0.5)); }
+  .scan-zone h2 { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; margin-bottom:0.5rem; }
+  .scan-zone p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
+  .scan-zone p strong { color:var(--accent); }
+  #barcode-input { display:none; }
 
-  .scan-zone::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--accent-dim);
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
+  .manual-input-wrap { display:flex; gap:0.75rem; margin-bottom:2rem; }
+  .manual-input { flex:1; padding:0.85rem 1rem; background:var(--surface); border:1px solid var(--border); border-radius:10px; font-family:'Inconsolata',monospace; font-size:0.9rem; color:var(--text); outline:none; transition:border-color 0.2s; }
+  .manual-input:focus { border-color:var(--accent); }
+  .manual-input::placeholder { color:var(--text-dimmer); }
+  .search-btn { padding:0.85rem 1.25rem; background:var(--accent); color:#000; border:none; border-radius:10px; font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+  .search-btn:hover { background:#00cc6a; box-shadow:0 0 20px rgba(0,255,136,0.4); }
+  .search-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
-  .scan-zone:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 30px rgba(0,255,136,0.1);
-  }
+  .result-card { display:none; background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; animation:fadeIn 0.4s ease; }
+  .result-card.show { display:block; }
+  .result-header { padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem; }
+  .result-verdict { font-size:2rem; flex-shrink:0; }
+  .result-info { flex:1; }
+  .result-name { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:0.2rem; }
+  .result-brand { font-size:0.78rem; color:var(--text-dim); }
+  .verdict-badge { padding:0.4rem 0.9rem; border-radius:100px; font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; flex-shrink:0; }
+  .verdict-safe { background:var(--accent-dim); color:var(--accent); border:1px solid var(--accent-mid); }
+  .verdict-warn { background:var(--warn-dim); color:var(--warn); border:1px solid rgba(255,184,0,0.3); }
+  .verdict-danger { background:var(--danger-dim); color:var(--danger); border:1px solid rgba(255,68,68,0.3); }
 
-  .scan-zone:hover::before { opacity: 1; }
+  .result-body { padding:1.25rem 1.5rem; }
+  .ai-analysis { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:1rem 1.25rem; margin-bottom:1.25rem; font-size:0.85rem; line-height:1.7; }
+  .ai-analysis-title { font-family:'Syne',sans-serif; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:0.6rem; }
 
-  .scan-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    display: block;
-    filter: drop-shadow(0 0 10px rgba(0,255,136,0.5));
-  }
+  .section-title { font-family:'Syne',sans-serif; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-dim); margin-bottom:0.6rem; margin-top:1rem; }
+  .ingredient-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.5rem; }
+  .tag { padding:0.3rem 0.7rem; border-radius:6px; font-size:0.78rem; }
+  .tag-danger { background:var(--danger-dim); color:var(--danger); border:1px solid rgba(255,68,68,0.2); }
+  .tag-warn { background:var(--warn-dim); color:var(--warn); border:1px solid rgba(255,184,0,0.2); }
+  .tag-safe { background:var(--accent-dim); color:var(--accent); border:1px solid var(--accent-mid); }
 
-  .scan-zone h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-  }
+  .loading { display:none; text-align:center; padding:2rem; color:var(--text-dim); font-size:0.85rem; }
+  .loading.show { display:block; }
+  .loader { width:40px; height:40px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem; box-shadow:0 0 10px rgba(0,255,136,0.2); }
+  @keyframes spin { to{transform:rotate(360deg)} }
 
-  .scan-zone p {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
+  /* Translator */
+  .lang-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:0.6rem; margin-bottom:1.5rem; }
+  .lang-btn { padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:10px; font-family:'Syne',sans-serif; font-size:0.78rem; font-weight:600; color:var(--text-dim); cursor:pointer; transition:all 0.15s; text-align:center; }
+  .lang-btn:hover { border-color:var(--accent); color:var(--text); }
+  .lang-btn.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
 
-  .scan-zone p strong { color: var(--accent); }
+  .translate-result { display:none; animation:fadeIn 0.3s ease; }
+  .translate-result.show { display:block; }
+  .translate-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+  .translate-card-header { padding:1rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .translate-card-header h3 { font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; }
+  .copy-btn { padding:0.35rem 0.8rem; background:var(--accent-dim); border:1px solid var(--accent-mid); border-radius:6px; font-family:'Syne',sans-serif; font-size:0.7rem; font-weight:700; color:var(--accent); cursor:pointer; transition:all 0.15s; text-transform:uppercase; }
+  .copy-btn:hover { background:var(--accent); color:#000; }
+  .translate-section { padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); }
+  .translate-section:last-child { border-bottom:none; }
+  .translate-section-label { font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-dimmer); margin-bottom:0.6rem; }
+  .translate-phrase { font-size:0.92rem; line-height:1.7; color:var(--text); }
 
-  #barcode-input { display: none; }
+  .info-blocks { display:flex; flex-direction:column; gap:0.75rem; margin-top:1.25rem; }
+  .info-block { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:1rem 1.25rem; }
+  .info-block-title { font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.5rem; }
+  .info-block-title.danger { color:var(--danger); }
+  .info-block-title.warn { color:var(--warn); }
+  .info-block-title.safe { color:var(--accent); }
+  .info-block p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
+  .info-block ul { list-style:none; display:flex; flex-direction:column; gap:0.3rem; margin-top:0.4rem; }
+  .info-block ul li { font-size:0.82rem; color:var(--text-dim); padding-left:1rem; position:relative; }
+  .info-block ul li::before { content:'→'; position:absolute; left:0; color:var(--text-dimmer); }
 
-  /* Manual barcode input */
-  .manual-input-wrap {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-  }
+  .disclaimer { text-align:center; font-size:0.68rem; color:var(--text-dimmer); padding:1rem 2rem 2rem; position:relative; z-index:10; line-height:1.6; }
 
-  .manual-input {
-    flex: 1;
-    padding: 0.85rem 1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-family: 'Inconsolata', monospace;
-    font-size: 0.9rem;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .manual-input:focus { border-color: var(--accent); }
-  .manual-input::placeholder { color: var(--text-dimmer); }
-
-  .search-btn {
-    padding: 0.85rem 1.25rem;
-    background: var(--accent);
-    color: #000;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-
-  .search-btn:hover { background: #00cc6a; box-shadow: 0 0 20px rgba(0,255,136,0.4); }
-  .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Result card */
-  .result-card {
-    display: none;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    animation: fadeIn 0.4s ease;
-  }
-
-  .result-card.show { display: block; }
-
-  .result-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .result-verdict {
-    font-size: 2rem;
-    flex-shrink: 0;
-  }
-
-  .result-info { flex: 1; }
-
-  .result-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.2rem;
-  }
-
-  .result-brand {
-    font-size: 0.78rem;
-    color: var(--text-dim);
-  }
-
-  .verdict-badge {
-    padding: 0.4rem 0.9rem;
-    border-radius: 100px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    flex-shrink: 0;
-  }
-
-  .verdict-safe { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-mid); }
-  .verdict-warn { background: var(--warn-dim); color: var(--warn); border: 1px solid rgba(255,184,0,0.3); }
-  .verdict-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(255,68,68,0.3); }
-
-  .result-body { padding: 1.25rem 1.5rem; }
-
-  .ai-analysis {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.25rem;
-    font-size: 0.85rem;
-    line-height: 1.7;
-    color: var(--text);
-  }
-
-  .ai-analysis-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    margin-bottom: 0.6rem;
-  }
-
-  /* Ingredient sections */
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    margin-bottom: 0.6rem;
-    margin-top: 1rem;
-  }
-
-  .ingredient-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .tag {
-    padding: 0.3rem 0.7rem;
-    border-radius: 6px;
-    font-size: 0.78rem;
-    font-family: 'Inconsolata', monospace;
-  }
-
-  .tag-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(255,68,68,0.2); }
-  .tag-warn { background: var(--warn-dim); color: var(--warn); border: 1px solid rgba(255,184,0,0.2); }
-  .tag-safe { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-mid); }
-
-  /* Loading */
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 2rem;
-    color: var(--text-dim);
-    font-size: 0.85rem;
-  }
-
-  .loading.show { display: block; }
-
-  .loader {
-    width: 40px;
-    height: 40px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 1rem;
-    box-shadow: 0 0 10px rgba(0,255,136,0.2);
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Translator panel */
-  .lang-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.6rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .lang-btn {
-    padding: 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-
-  .lang-btn:hover { border-color: var(--accent); color: var(--text); }
-  .lang-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-
-  .translate-result {
-    display: none;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .translate-result.show { display: block; }
-
-  .translate-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .translate-card-header {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .translate-card-header h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .copy-btn {
-    padding: 0.35rem 0.8rem;
-    background: var(--accent-dim);
-    border: 1px solid var(--accent-mid);
-    border-radius: 6px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--accent);
-    cursor: pointer;
-    transition: all 0.15s;
-    text-transform: uppercase;
-  }
-
-  .copy-btn:hover { background: var(--accent); color: #000; }
-
-  .translate-section {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .translate-section:last-child { border-bottom: none; }
-
-  .translate-section-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-dimmer);
-    margin-bottom: 0.6rem;
-  }
-
-  .translate-phrase {
-    font-size: 0.92rem;
-    line-height: 1.7;
-    color: var(--text);
-  }
-
-  .translate-note {
-    margin-top: 0.6rem;
-    font-size: 0.78rem;
-    color: var(--warn);
-    line-height: 1.5;
-  }
-
-  .info-blocks {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1.25rem;
-  }
-
-  .info-block {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-  }
-
-  .info-block-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.5rem;
-  }
-
-  .info-block-title.danger { color: var(--danger); }
-  .info-block-title.warn { color: var(--warn); }
-  .info-block-title.safe { color: var(--accent); }
-
-  .info-block p {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-
-  .info-block ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    margin-top: 0.4rem;
-  }
-
-  .info-block ul li {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .info-block ul li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--text-dimmer);
-  }
-
-  /* Section header */
-  .section-header {
-    margin-bottom: 1.5rem;
-  }
-
-  .section-header h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 0.3rem;
-  }
-
-  .section-header p {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-  }
-
-  /* Image preview */
-  .img-preview {
-    display: none;
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border);
-  }
-
-  .img-preview.show { display: block; }
-
-  /* Disclaimer */
-  .disclaimer {
-    text-align: center;
-    font-size: 0.68rem;
-    color: var(--text-dimmer);
-    padding: 1rem 2rem 2rem;
-    position: relative;
-    z-index: 10;
-    line-height: 1.6;
-  }
+  /* API Key setup */
+  .setup-banner { background:var(--surface); border:1px solid var(--warn); border-radius:12px; padding:1rem 1.25rem; margin-bottom:1.5rem; display:none; }
+  .setup-banner.show { display:block; }
+  .setup-banner p { font-size:0.82rem; color:var(--warn); margin-bottom:0.6rem; }
+  .setup-banner input { width:100%; padding:0.65rem 1rem; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-family:'Inconsolata',monospace; font-size:0.85rem; color:var(--text); outline:none; margin-bottom:0.5rem; }
+  .setup-banner input:focus { border-color:var(--accent); }
+  .save-key-btn { padding:0.5rem 1rem; background:var(--accent); color:#000; border:none; border-radius:8px; font-family:'Syne',sans-serif; font-size:0.75rem; font-weight:700; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -605,10 +203,7 @@
     <div class="logo-mark">⬡</div>
     <div class="logo-name">Celiac<span>Scan</span></div>
   </div>
-  <div class="status-dot">
-    <div class="dot"></div>
-    Sistema attivo
-  </div>
+  <div class="status-dot"><div class="dot"></div>Sistema attivo</div>
 </header>
 
 <div class="tabs">
@@ -618,46 +213,44 @@
 
 <div class="main">
 
-  <!-- SCANNER PANEL -->
+  <!-- SCANNER -->
   <div class="panel active" id="panel-scanner">
-
     <div class="section-header">
       <h2>Scanner prodotti</h2>
-      <p>Scansiona il barcode o carica la foto — analisi completa degli ingredienti per celiaci</p>
+      <p>Inserisci il codice a barre — analisi completa degli ingredienti per celiaci</p>
     </div>
 
-    <!-- Scan zone -->
+    <div class="setup-banner" id="setup-banner">
+      <p>⚠️ Inserisci la tua Groq API Key per usare lo scanner (salvata solo nel tuo browser)</p>
+      <input type="password" id="api-key-input" placeholder="gsk_...">
+      <button class="save-key-btn" onclick="saveKey()">Salva e continua</button>
+    </div>
+
     <div class="scan-zone" onclick="document.getElementById('barcode-input').click()">
       <span class="scan-icon">📷</span>
-      <h2>Scansiona o carica foto</h2>
-      <p>Foto del <strong>barcode</strong> o degli <strong>ingredienti</strong><br>Il sistema analizza tutto automaticamente</p>
+      <h2>Carica foto prodotto</h2>
+      <p>Foto del <strong>barcode</strong> o degli <strong>ingredienti</strong></p>
     </div>
     <input type="file" id="barcode-input" accept="image/*" onchange="handleImage(this)">
 
-    <!-- Manual barcode -->
     <div class="manual-input-wrap">
-      <input type="text" class="manual-input" id="barcode-text" placeholder="Oppure inserisci il codice a barre manualmente (es. 8001120895325)" inputmode="numeric">
-      <button class="search-btn" onclick="searchByBarcode()">Cerca</button>
+      <input type="text" class="manual-input" id="barcode-text" placeholder="Codice a barre (es. 8008698002025)" inputmode="numeric">
+      <button class="search-btn" id="search-btn" onclick="searchByBarcode()">Cerca</button>
     </div>
 
-    <!-- Image preview -->
-    <img class="img-preview" id="img-preview" src="" alt="Prodotto">
-
-    <!-- Loading -->
     <div class="loading" id="loading">
       <div class="loader"></div>
       Analisi ingredienti in corso...
     </div>
 
-    <!-- Result -->
     <div class="result-card" id="result-card">
       <div class="result-header">
         <div class="result-verdict" id="result-verdict">✅</div>
         <div class="result-info">
-          <div class="result-name" id="result-name">Prodotto</div>
-          <div class="result-brand" id="result-brand">Marca</div>
+          <div class="result-name" id="result-name"></div>
+          <div class="result-brand" id="result-brand"></div>
         </div>
-        <div class="verdict-badge" id="verdict-badge">Sicuro</div>
+        <div class="verdict-badge" id="verdict-badge"></div>
       </div>
       <div class="result-body">
         <div class="ai-analysis">
@@ -667,34 +260,32 @@
         <div id="ingredients-sections"></div>
       </div>
     </div>
-
   </div>
 
-  <!-- TRANSLATOR PANEL -->
+  <!-- TRANSLATOR -->
   <div class="panel" id="panel-translator">
-
     <div class="section-header">
       <h2>Traduttore celiaco</h2>
-      <p>Spiega la celiachia al cameriere nella sua lingua — con avvisi specifici per ogni cucina</p>
+      <p>Spiega la celiachia al cameriere — con avvisi specifici per ogni cucina</p>
     </div>
 
     <div class="lang-grid">
-      <button class="lang-btn" onclick="translate('inglese', this)">🇬🇧 Inglese</button>
-      <button class="lang-btn" onclick="translate('spagnolo', this)">🇪🇸 Spagnolo</button>
-      <button class="lang-btn" onclick="translate('francese', this)">🇫🇷 Francese</button>
-      <button class="lang-btn" onclick="translate('tedesco', this)">🇩🇪 Tedesco</button>
-      <button class="lang-btn" onclick="translate('giapponese', this)">🇯🇵 Giapponese</button>
-      <button class="lang-btn" onclick="translate('cinese', this)">🇨🇳 Cinese</button>
-      <button class="lang-btn" onclick="translate('lituano', this)">🇱🇹 Lituano</button>
-      <button class="lang-btn" onclick="translate('portoghese', this)">🇵🇹 Portoghese</button>
-      <button class="lang-btn" onclick="translate('arabo', this)">🇸🇦 Arabo</button>
-      <button class="lang-btn" onclick="translate('russo', this)">🇷🇺 Russo</button>
+      <button class="lang-btn" onclick="translateLang('inglese', this)">🇬🇧 Inglese</button>
+      <button class="lang-btn" onclick="translateLang('spagnolo', this)">🇪🇸 Spagnolo</button>
+      <button class="lang-btn" onclick="translateLang('francese', this)">🇫🇷 Francese</button>
+      <button class="lang-btn" onclick="translateLang('tedesco', this)">🇩🇪 Tedesco</button>
+      <button class="lang-btn" onclick="translateLang('giapponese', this)">🇯🇵 Giapponese</button>
+      <button class="lang-btn" onclick="translateLang('cinese', this)">🇨🇳 Cinese</button>
+      <button class="lang-btn" onclick="translateLang('lituano', this)">🇱🇹 Lituano</button>
+      <button class="lang-btn" onclick="translateLang('portoghese', this)">🇵🇹 Portoghese</button>
+      <button class="lang-btn" onclick="translateLang('arabo', this)">🇸🇦 Arabo</button>
+      <button class="lang-btn" onclick="translateLang('russo', this)">🇷🇺 Russo</button>
     </div>
 
     <div class="translate-result" id="translate-result">
       <div class="translate-card">
         <div class="translate-card-header">
-          <h3 id="translate-lang-title">Frase principale</h3>
+          <h3 id="translate-lang-title"></h3>
           <button class="copy-btn" onclick="copyPhrase()">Copia</button>
         </div>
         <div class="translate-section">
@@ -703,10 +294,10 @@
         </div>
         <div class="translate-section">
           <div class="translate-section-label">⚠️ Attenzione specifica per questa cucina</div>
-          <div class="translate-phrase" id="translate-warning" style="color: var(--warn); font-size:0.85rem;"></div>
+          <div class="translate-phrase" id="translate-warning" style="color:var(--warn);font-size:0.85rem;"></div>
         </div>
-        <div class="translate-section" id="translate-avoid-section">
-          <div class="translate-section-label">❌ Ingredienti da evitare sempre in questa cucina</div>
+        <div class="translate-section">
+          <div class="translate-section-label">❌ Ingredienti da evitare in questa cucina</div>
           <div id="translate-avoid"></div>
         </div>
       </div>
@@ -714,40 +305,57 @@
       <div class="info-blocks">
         <div class="info-block">
           <div class="info-block-title danger">❌ Cos'è la celiachia</div>
-          <p>La celiachia è una malattia autoimmune permanente. Anche una piccola quantità di glutine (20ppm) danneggia l'intestino — non è una preferenza alimentare, è una necessità medica.</p>
+          <p>Malattia autoimmune permanente. Anche 20ppm di glutine danneggiano l'intestino — non è una scelta, è una necessità medica.</p>
         </div>
         <div class="info-block">
           <div class="info-block-title warn">⚠️ Contaminazione crociata</div>
           <p>Non basta un piatto senza glutine — servono:</p>
           <ul>
             <li>Utensili puliti e separati</li>
-            <li>Superfici pulite non contaminate da farina</li>
-            <li>Olio di frittura non condiviso con prodotti impanati</li>
+            <li>Superfici non contaminate da farina</li>
+            <li>Olio di frittura non condiviso</li>
             <li>Acqua di cottura pasta separata</li>
-            <li>Mani lavate dopo aver maneggiato prodotti con glutine</li>
           </ul>
         </div>
         <div class="info-block">
           <div class="info-block-title safe">✓ Cereali sempre sicuri</div>
-          <p>Riso, mais, patate, quinoa, amaranto, grano saraceno, miglio, sorgo, teff — naturalmente privi di glutine.</p>
+          <p>Riso, mais, patate, quinoa, amaranto, grano saraceno, miglio, sorgo, teff.</p>
         </div>
       </div>
     </div>
-
   </div>
 
 </div>
 
 <div class="disclaimer">
-  ⚠️ CeliacScan è uno strumento di supporto. Verifica sempre le etichette originali e consulta il tuo medico.<br>
-  Dati prodotti: OpenFoodFacts (open source). Analisi: AI — non sostituisce una diagnosi medica.
+  ⚠️ CeliacScan è uno strumento di supporto. Verifica sempre le etichette originali.<br>
+  Dati: OpenFoodFacts (open source). Analisi: Groq AI.
 </div>
 
 <script>
-// ─── Config ──────────────────────────────────────────────────
-const BACKEND = "";
+// ─── API Key management ───────────────────────────────────────
+let GROQ_KEY = localStorage.getItem('groq_key') || '';
 
-// ─── Tab switching ───────────────────────────────────────────
+function checkKey() {
+  if (!GROQ_KEY) {
+    document.getElementById('setup-banner').classList.add('show');
+  }
+}
+
+function saveKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (val.startsWith('gsk_')) {
+    GROQ_KEY = val;
+    localStorage.setItem('groq_key', val);
+    document.getElementById('setup-banner').classList.remove('show');
+  } else {
+    alert('La key Groq deve iniziare con gsk_');
+  }
+}
+
+checkKey();
+
+// ─── Tab switching ────────────────────────────────────────────
 function switchTab(panel, btn) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -755,21 +363,14 @@ function switchTab(panel, btn) {
   document.getElementById('panel-' + panel).classList.add('active');
 }
 
-// ─── Scanner ─────────────────────────────────────────────────
+// ─── Scanner ──────────────────────────────────────────────────
 function handleImage(input) {
   if (!input.files[0]) return;
   const file = input.files[0];
-
-  // Show preview
-  const preview = document.getElementById('img-preview');
-  preview.src = URL.createObjectURL(file);
-  preview.classList.add('show');
-
   const reader = new FileReader();
   reader.onload = async (e) => {
     const base64 = e.target.result.split(',')[1];
-    const mediaType = file.type;
-    await analyzeWithAI(null, base64, mediaType);
+    await analyzeWithImage(base64, file.type);
   };
   reader.readAsDataURL(file);
 }
@@ -777,95 +378,141 @@ function handleImage(input) {
 async function searchByBarcode() {
   const code = document.getElementById('barcode-text').value.trim();
   if (!code) return;
-  document.getElementById('img-preview').classList.remove('show');
-  await analyzeWithAI(code, null, null);
-}
+  if (!GROQ_KEY) { checkKey(); return; }
 
-document.getElementById('barcode-text').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') searchByBarcode();
-});
+  setLoading(true);
 
-async function analyzeWithAI(barcode, imageBase64, mediaType) {
-  const loading = document.getElementById('loading');
-  const resultCard = document.getElementById('result-card');
-
-  loading.classList.add('show');
-  resultCard.classList.remove('show');
-
-  try {
-    let productData = null;
-    let ingredientText = '';
-
-    // Step 1: Se barcode, cerca su OpenFoodFacts
-    if (barcode) {
-      productData = await fetchOpenFoodFacts(barcode);
-      if (productData) {
-        ingredientText = productData.ingredients_text || '';
-      }
-    }
-
-    // Step 2: Analisi AI
-    const result = await callBackendScan(barcode, imageBase64, mediaType, productData);
-
-    loading.classList.remove('show');
-    renderResult(result, productData);
-
-  } catch (err) {
-    loading.classList.remove('show');
-    renderError('Errore durante l\'analisi. Riprova.');
-  }
-}
-
-async function fetchOpenFoodFacts(barcode) {
+  // 1. Cerca su OpenFoodFacts dal browser
+  let productData = null;
   try {
     const resp = await fetch(
-      `https://world.openfoodfacts.org/api/v2/product/${barcode}?fields=product_name,brands,ingredients_text,allergens,labels`,
-      {
-        headers: {
-          'User-Agent': 'CeliacScan/1.0 (https://scan-gluten.vercel.app)'
-        }
-      }
+      `https://world.openfoodfacts.org/api/v2/product/${code}?fields=product_name,brands,ingredients_text,allergens,labels`,
+      { headers: { 'User-Agent': 'CeliacScan/1.0' } }
     );
     const data = await resp.json();
-    if (data.status === 1) {
-      return data.product;
-    }
-  } catch (e) {
+    if (data.status === 1) productData = data.product;
+  } catch(e) {
     console.log('OpenFoodFacts error:', e);
   }
-  return null;
+
+  // 2. Analizza con Groq
+  const result = await analyzeWithGroq(productData, code);
+  setLoading(false);
+  renderResult(result);
 }
 
-async function callBackendScan(barcode, imageBase64, mediaType, productData) {
-  const resp = await fetch(`${BACKEND}/api/scan`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      barcode,
-      image: imageBase64,
-      media_type: mediaType,
-      product_data: productData ? {
-        name: productData.product_name || '',
-        brand: productData.brands || '',
-        ingredients: productData.ingredients_text || '',
-        labels: productData.labels || '',
-        allergens: productData.allergens || ''
-      } : null
-    })
-  });
-  return await resp.json();
+async function analyzeWithImage(base64, mediaType) {
+  if (!GROQ_KEY) { checkKey(); return; }
+  setLoading(true);
+
+  // Per le immagini usiamo llama con vision
+  try {
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image_url',
+              image_url: { url: `data:${mediaType};base64,${base64}` }
+            },
+            {
+              type: 'text',
+              text: `Sei un esperto di celiachia. Analizza questa immagine (barcode o ingredienti).
+Rispondi SOLO in JSON:
+{"prodotto":"nome","marca":"marca","sicuro":true,"livello":"verde","analisi":"spiegazione breve","ingredienti_pericolosi":[],"ingredienti_sospetti":[],"conservanti_rischiosi":[],"ingredienti_sicuri":[],"avviso_contaminazione":null}
+sicuro=true SOLO se zero glutine. Solo JSON nessun testo.`
+            }
+          ]
+        }],
+        max_tokens: 800,
+        temperature: 0.1
+      })
+    });
+    const data = await resp.json();
+    const text = data.choices?.[0]?.message?.content || '{}';
+    const result = parseJSON(text);
+    setLoading(false);
+    renderResult(result);
+  } catch(e) {
+    setLoading(false);
+    renderResult({ error: e.message, prodotto: 'Errore', sicuro: false, livello: 'rosso', analisi: 'Errore analisi immagine. Prova con il codice a barre.' });
+  }
 }
 
-function renderResult(data, productData) {
-  const card = document.getElementById('result-card');
+async function analyzeWithGroq(productData, barcode) {
+  let prompt = '';
 
-  // Header
-  const name = data.prodotto || productData?.product_name || 'Prodotto analizzato';
-  const brand = data.marca || productData?.brands || '';
-  document.getElementById('result-name').textContent = name;
-  document.getElementById('result-brand').textContent = brand;
+  if (productData && productData.ingredients_text) {
+    prompt = `Sei un esperto di celiachia. Analizza per un celiaco.
+PRODOTTO: ${productData.product_name || ''}
+MARCA: ${productData.brands || ''}
+INGREDIENTI: ${productData.ingredients_text || ''}
+ALLERGENI: ${productData.allergens || ''}
 
-  // Verdict
+Rispondi SOLO in JSON:
+{"prodotto":"${(productData.product_name||'').replace(/"/g,"'")}","marca":"${(productData.brands||'').replace(/"/g,"'")}","sicuro":true,"livello":"verde","analisi":"spiegazione breve in italiano max 2 righe","ingredienti_pericolosi":[],"ingredienti_sospetti":[],"conservanti_rischiosi":[],"ingredienti_sicuri":[],"avviso_contaminazione":null}
+
+REGOLE FONDAMENTALI:
+- sicuro=true SOLO se ZERO glutine
+- Pericolosi: frumento grano orzo segale farro kamut malto glutine spelta
+- Sospetti: amido non specificato aromi naturali proteine vegetali idrolizzate destrina
+- Se "tracce di glutine" o "prodotto in stabilimento con glutine": sicuro=false livello=giallo avviso_contaminazione="Rischio contaminazione crociata dichiarata in etichetta"
+- Solo JSON nessun altro testo`;
+  } else {
+    prompt = `Prodotto con barcode ${barcode}. Non trovato nel database.
+Rispondi SOLO in JSON:
+{"prodotto":"Prodotto non trovato","marca":"","sicuro":false,"livello":"giallo","analisi":"Prodotto non trovato nel database OpenFoodFacts. Cerca manualmente gli ingredienti sull etichetta e inseriscili per una analisi precisa.","ingredienti_pericolosi":[],"ingredienti_sospetti":[],"conservanti_rischiosi":[],"ingredienti_sicuri":[],"avviso_contaminazione":null}`;
+  }
+
+  try {
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 800,
+        temperature: 0.1
+      })
+    });
+    const data = await resp.json();
+    const text = data.choices?.[0]?.message?.content || '{}';
+    return parseJSON(text);
+  } catch(e) {
+    return { error: e.message, prodotto: 'Errore', sicuro: false, livello: 'rosso', analisi: 'Errore di connessione. Verifica la tua API key Groq.' };
+  }
+}
+
+function parseJSON(text) {
+  try {
+    const clean = text.replace(/```json/g,'').replace(/```/g,'').trim();
+    const start = clean.indexOf('{');
+    const end = clean.lastIndexOf('}') + 1;
+    if (start >= 0 && end > start) return JSON.parse(clean.slice(start, end));
+  } catch(e) {}
+  return { prodotto: 'Errore parsing', sicuro: false, livello: 'rosso', analisi: 'Risposta AI non valida. Riprova.', ingredienti_pericolosi: [], ingredienti_sospetti: [], conservanti_rischiosi: [], ingredienti_sicuri: [] };
+}
+
+function setLoading(show) {
+  document.getElementById('loading').classList.toggle('show', show);
+  document.getElementById('result-card').classList.toggle('show', false);
+  document.getElementById('search-btn').disabled = show;
+}
+
+function renderResult(data) {
+  document.getElementById('result-name').textContent = data.prodotto || 'Prodotto analizzato';
+  document.getElementById('result-brand').textContent = data.marca || '';
+
   const verdictEl = document.getElementById('result-verdict');
   const badgeEl = document.getElementById('verdict-badge');
 
@@ -883,147 +530,107 @@ function renderResult(data, productData) {
     badgeEl.className = 'verdict-badge verdict-danger';
   }
 
-  // AI analysis
-  document.getElementById('ai-text').textContent = data.analisi || data.consiglio || '';
+  document.getElementById('ai-text').textContent = data.analisi || '';
 
-  // Ingredients sections
   const sections = document.getElementById('ingredients-sections');
   sections.innerHTML = '';
 
   if (data.ingredienti_pericolosi?.length) {
-    sections.innerHTML += `
-      <div class="section-title">❌ Contengono glutine</div>
-      <div class="ingredient-tags">
-        ${data.ingredienti_pericolosi.map(i => `<span class="tag tag-danger">${i}</span>`).join('')}
-      </div>`;
+    sections.innerHTML += `<div class="section-title">❌ Contengono glutine</div><div class="ingredient-tags">${data.ingredienti_pericolosi.map(i=>`<span class="tag tag-danger">${i}</span>`).join('')}</div>`;
   }
-
   if (data.ingredienti_sospetti?.length) {
-    sections.innerHTML += `
-      <div class="section-title">⚠️ Sospetti o ambigui</div>
-      <div class="ingredient-tags">
-        ${data.ingredienti_sospetti.map(i => `<span class="tag tag-warn">${i}</span>`).join('')}
-      </div>`;
+    sections.innerHTML += `<div class="section-title">⚠️ Sospetti o ambigui</div><div class="ingredient-tags">${data.ingredienti_sospetti.map(i=>`<span class="tag tag-warn">${i}</span>`).join('')}</div>`;
   }
-
   if (data.conservanti_rischiosi?.length) {
-    sections.innerHTML += `
-      <div class="section-title">⚠️ Conservanti/coloranti da verificare</div>
-      <div class="ingredient-tags">
-        ${data.conservanti_rischiosi.map(i => `<span class="tag tag-warn">${i}</span>`).join('')}
-      </div>`;
+    sections.innerHTML += `<div class="section-title">⚠️ Conservanti da verificare</div><div class="ingredient-tags">${data.conservanti_rischiosi.map(i=>`<span class="tag tag-warn">${i}</span>`).join('')}</div>`;
   }
-
   if (data.ingredienti_sicuri?.length) {
-    sections.innerHTML += `
-      <div class="section-title">✓ Ingredienti sicuri</div>
-      <div class="ingredient-tags">
-        ${data.ingredienti_sicuri.map(i => `<span class="tag tag-safe">${i}</span>`).join('')}
-      </div>`;
+    sections.innerHTML += `<div class="section-title">✓ Ingredienti sicuri</div><div class="ingredient-tags">${data.ingredienti_sicuri.map(i=>`<span class="tag tag-safe">${i}</span>`).join('')}</div>`;
   }
-
   if (data.avviso_contaminazione) {
-    sections.innerHTML += `
-      <div style="margin-top:1rem;padding:0.75rem 1rem;background:var(--warn-dim);border:1px solid rgba(255,184,0,0.2);border-radius:8px;font-size:0.82rem;color:var(--warn)">
-        ⚠️ ${data.avviso_contaminazione}
-      </div>`;
+    sections.innerHTML += `<div style="margin-top:1rem;padding:0.75rem 1rem;background:var(--warn-dim);border:1px solid rgba(255,184,0,0.2);border-radius:8px;font-size:0.82rem;color:var(--warn)">⚠️ ${data.avviso_contaminazione}</div>`;
   }
 
-  card.classList.add('show');
+  document.getElementById('result-card').classList.add('show');
 }
 
-function renderError(msg) {
-  const card = document.getElementById('result-card');
-  document.getElementById('result-verdict').textContent = '⚠️';
-  document.getElementById('result-name').textContent = msg;
-  document.getElementById('result-brand').textContent = '';
-  document.getElementById('verdict-badge').textContent = 'Errore';
-  document.getElementById('verdict-badge').className = 'verdict-badge verdict-warn';
-  document.getElementById('ai-text').textContent = 'Assicurati che il backend Railway sia attivo e riprova.';
-  document.getElementById('ingredients-sections').innerHTML = '';
-  card.classList.add('show');
-}
+document.getElementById('barcode-text').addEventListener('keydown', e => {
+  if (e.key === 'Enter') searchByBarcode();
+});
 
 // ─── Translator ───────────────────────────────────────────────
 const TRANSLATIONS = {
   inglese: {
     title: "🇬🇧 English",
     phrase: "I have celiac disease. I cannot eat gluten — not even traces. Please ensure there is no cross-contamination with wheat, barley, rye, or oats. I need separate utensils and clean surfaces.",
-    warning: "⚠️ UK/US cuisine: Watch out for hidden gluten in sauces, gravies, and 'modified starch'. Always ask if flour is used as a thickener.",
-    avoid: ["Wheat flour", "Barley malt", "Rye", "Regular soy sauce", "Beer batter", "Modified starch (if unspecified)"]
+    warning: "⚠️ Watch out for hidden gluten in sauces, gravies, and 'modified starch'. Always ask if flour is used as a thickener.",
+    avoid: ["Wheat flour","Barley malt","Rye","Regular soy sauce","Beer batter","Modified starch (unspecified)"]
   },
   spagnolo: {
     title: "🇪🇸 Español",
     phrase: "Tengo enfermedad celíaca. No puedo comer gluten, ni siquiera trazas. Por favor, asegúrese de que no haya contaminación cruzada con trigo, cebada o centeno. Necesito utensilios separados y superficies limpias.",
-    warning: "⚠️ Cucina spagnola: Attenzione alla salsa romesco (può contenere pane), croquetas, empanadas e molte salse addensate con farina. Il chorizo è generalmente sicuro ma verificare.",
-    avoid: ["Harina de trigo", "Cebada", "Pan rallado", "Salsa de soja", "Cerveza", "Almidón modificado"]
+    warning: "⚠️ Attenzione alla salsa romesco (può contenere pane), croquetas, empanadas e salse addensate con farina.",
+    avoid: ["Harina de trigo","Cebada","Pan rallado","Salsa de soja","Cerveza","Almidón modificado"]
   },
   francese: {
     title: "🇫🇷 Français",
-    phrase: "J'ai la maladie coeliaque. Je ne peux pas manger de gluten, même en traces infimes. Merci de vous assurer qu'il n'y a pas de contamination croisée avec le blé, l'orge ou le seigle. J'ai besoin d'ustensiles séparés.",
-    warning: "⚠️ Cucina francese: Attenzione alla béchamel (farina di grano), molte salse addensate con roux, croissant e pane. Il foie gras è spesso servito con pan brioche.",
-    avoid: ["Farine de blé", "Orge", "Seigle", "Béchamel classique", "Roux", "Pain"]
+    phrase: "J'ai la maladie coeliaque. Je ne peux pas manger de gluten, même en traces. Merci de vous assurer qu'il n'y a pas de contamination croisée avec le blé, l'orge ou le seigle.",
+    warning: "⚠️ Attenzione alla béchamel (farina di grano), roux, croissant e pane. Il foie gras è spesso servito con pan brioche.",
+    avoid: ["Farine de blé","Orge","Seigle","Béchamel classique","Roux","Pain"]
   },
   tedesco: {
     title: "🇩🇪 Deutsch",
-    phrase: "Ich habe Zöliakie. Ich kann kein Gluten essen, auch keine Spuren. Bitte stellen Sie sicher, dass keine Kreuzkontamination mit Weizen, Gerste oder Roggen stattfindet. Ich brauche sauberes, separates Besteck.",
-    warning: "⚠️ Cucina tedesca: ALTA ATTENZIONE. Pane di segale, würstel (spesso contengono filler), birra, bretzel, knödel (gnocchi di pane), schnitzel impanato sono ovunque.",
-    avoid: ["Weizen", "Roggen", "Gerste", "Malz", "Paniermehl", "Bier", "Semmelknödel"]
+    phrase: "Ich habe Zöliakie. Ich kann kein Gluten essen, auch keine Spuren. Bitte stellen Sie sicher, dass keine Kreuzkontamination mit Weizen, Gerste oder Roggen stattfindet.",
+    warning: "⚠️ ALTA ATTENZIONE. Pane di segale, würstel, birra, bretzel, knödel, schnitzel impanato sono ovunque.",
+    avoid: ["Weizen","Roggen","Gerste","Malz","Paniermehl","Bier","Semmelknödel"]
   },
   giapponese: {
     title: "🇯🇵 日本語",
     phrase: "私はセリアック病です。グルテンは微量でも食べられません。小麦、大麦、ライ麦との交差汚染がないようにしてください。別の調理器具と清潔な調理台が必要です。",
-    warning: "⚠️ Cucina giapponese: PERICOLO PRINCIPALE è la salsa di soia (shoyu) — contiene frumento. Porta con te la salsa tamari (GF). Evita tempura, ramen, udon, soba di grano. Il miso può contenere orzo.",
-    avoid: ["醤油 (salsa di soia)", "天ぷら (tempura)", "ラーメン (ramen)", "うどん (udon)", "小麦粉 (farina di frumento)", "麦味噌 (miso d'orzo)"]
+    warning: "⚠️ PERICOLO PRINCIPALE: salsa di soia (shoyu) contiene frumento. Porta salsa tamari. Evita tempura, ramen, udon, soba.",
+    avoid: ["醤油 soia","天ぷら tempura","ラーメン ramen","うどん udon","小麦粉 farina","麦味噌 miso orzo"]
   },
   cinese: {
     title: "🇨🇳 中文",
     phrase: "我有乳糜泻。我不能吃麸质，哪怕是微量的。请确保没有与小麦、大麦、黑麦的交叉污染。我需要单独的餐具和干净的烹饪表面。",
-    warning: "⚠️ Cucina cinese: ATTENZIONE MASSIMA. Quasi tutte le salse cinesi contengono soia con frumento. La salsa di ostriche, hoisin, salsa XO contengono glutine. I noodles sono quasi sempre di grano.",
-    avoid: ["酱油 (salsa di soia)", "面条 (noodles di grano)", "饺子皮 (pasta ravioli)", "蚝油 (salsa ostriche)", "海鲜酱 (salsa hoisin)", "小麦淀粉 (amido di frumento)"]
+    warning: "⚠️ ATTENZIONE MASSIMA. Quasi tutte le salse cinesi contengono soia con frumento. I noodles sono quasi sempre di grano.",
+    avoid: ["酱油 soia","面条 noodles grano","饺子皮 ravioli","蚝油 ostriche","海鲜酱 hoisin","小麦淀粉 amido"]
   },
   lituano: {
     title: "🇱🇹 Lietuvių",
-    phrase: "Aš sergu celiakija. Negaliu valgyti glitimo, net mažiausių kiekių. Prašau užtikrinti, kad nebūtų kryžminio užteršimo su kviečiais, miežiais ar rugiais. Man reikia atskirų indų ir švarių paviršių.",
-    warning: "⚠️ Cucina lituana/baltica: Attenzione al pane di segale (labai populiarus), cepelinai (zeppelin) fatti con farina, birra locale. Lo šaltibarščiai (zuppa di barbabietola) è generalmente sicuro.",
-    avoid: ["Kvietiniai miltai (farina)", "Rugiai (segale)", "Miežiai (orzo)", "Alus (birra)", "Duona (pane)", "Košė su miežiais (orzo)"]
+    phrase: "Aš sergu celiakija. Negaliu valgyti glitimo, net mažiausių kiekių. Prašau užtikrinti, kad nebūtų kryžminio užteršimo su kviečiais, miežiais ar rugiais.",
+    warning: "⚠️ Attenzione al pane di segale, cepelinai con farina, birra locale.",
+    avoid: ["Kvietiniai miltai","Rugiai segale","Miežiai orzo","Alus birra","Duona pane"]
   },
   portoghese: {
     title: "🇵🇹 Português",
-    phrase: "Tenho doença celíaca. Não posso comer glúten, nem mesmo traços. Por favor, certifique-se de que não há contaminação cruzada com trigo, cevada ou centeio. Preciso de utensílios separados e superfícies limpas.",
-    warning: "⚠️ Cucina portoghese/brasiliana: Attenzione ai pastéis (fritti impanati), coxinha, pão de queijo (il vero è GF ma verificare), molte fritture. Il bacalhau alla griglia è generalmente sicuro.",
-    avoid: ["Farinha de trigo", "Cevada", "Centeio", "Molho de soja", "Pão ralado", "Cerveja"]
+    phrase: "Tenho doença celíaca. Não posso comer glúten, nem mesmo traços. Por favor, certifique-se de que não há contaminação cruzada com trigo, cevada ou centeio.",
+    warning: "⚠️ Attenzione ai pastéis, coxinha, fritture. Il bacalhau alla griglia è generalmente sicuro.",
+    avoid: ["Farinha de trigo","Cevada","Centeio","Molho de soja","Pão ralado","Cerveja"]
   },
   arabo: {
     title: "🇸🇦 العربية",
-    phrase: "أعاني من مرض الاضطرابات الهضمية. لا أستطيع تناول الغلوتين، ولا حتى كميات ضئيلة منه. يرجى التأكد من عدم وجود تلوث متقاطع مع القمح أو الشعير أو الجاودار. أحتاج إلى أدوات منفصلة وأسطح نظيفة.",
-    warning: "⚠️ Cucina mediorientale/araba: Attenzione al bulgur (contiene glutine), couscous, pita, fattoush (con pane fritto), molte pastelle fritte. L'hummus puro e il riso sono sicuri.",
-    avoid: ["القمح (grano)", "البرغل (bulgur)", "الكسكس (couscous)", "صلصة الصويا (soia)", "الخبز (pane)", "البيرة (birra)"]
+    phrase: "أعاني من مرض الاضطرابات الهضمية. لا أستطيع تناول الغلوتين، ولا حتى كميات ضئيلة منه. يرجى التأكد من عدم وجود تلوث متقاطع مع القمح أو الشعير أو الجاودار.",
+    warning: "⚠️ Attenzione al bulgur, couscous, pita, fattoush. L'hummus puro e il riso sono sicuri.",
+    avoid: ["القمح grano","البرغل bulgur","الكسكس couscous","صلصة الصويا soia","الخبز pane"]
   },
   russo: {
     title: "🇷🇺 Русский",
-    phrase: "У меня целиакия. Я не могу есть глютен — даже в следовых количествах. Пожалуйста, убедитесь в отсутствии перекрёстного заражения с пшеницей, ячменём или рожью. Мне нужны отдельные приборы и чистые поверхности.",
-    warning: "⚠️ Cucina russa: Attenzione ai pelmeni (ravioli di grano), blini (pancakes di farina), pirozhki (pasticcini ripieni), kasha di grano saraceno (la sola senza glutine). La birra russa contiene glutine.",
-    avoid: ["Пшеница (grano)", "Ячмень (orzo)", "Рожь (segale)", "Пельмени (ravioli)", "Блины (blini)", "Пиво (birra)"]
+    phrase: "У меня целиакия. Я не могу есть глютен — даже в следовых количествах. Пожалуйста, убедитесь в отсутствии перекрёстного заражения с пшеницей, ячменём или рожью.",
+    warning: "⚠️ Attenzione ai pelmeni, blini, pirozhki. La birra russa contiene glutine.",
+    avoid: ["Пшеница grano","Ячмень orzo","Рожь segale","Пельмени ravioli","Блины blini","Пиво birra"]
   }
 };
 
-function translate(lang, btn) {
+function translateLang(lang, btn) {
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-
   const data = TRANSLATIONS[lang];
   if (!data) return;
-
   document.getElementById('translate-lang-title').textContent = data.title;
   document.getElementById('translate-phrase').textContent = data.phrase;
   document.getElementById('translate-warning').textContent = data.warning;
-
-  const avoidEl = document.getElementById('translate-avoid');
-  avoidEl.innerHTML = data.avoid.map(item =>
-    `<span class="tag tag-danger" style="margin:0.2rem">${item}</span>`
-  ).join('');
-
+  document.getElementById('translate-avoid').innerHTML = data.avoid.map(i => `<span class="tag tag-danger" style="margin:0.2rem;display:inline-block">${i}</span>`).join('');
   document.getElementById('translate-result').classList.add('show');
 }
 
