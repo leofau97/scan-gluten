@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CeliacScan — Scanner per Celiaci</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #111111;
+    --surface2: #1A1A1A;
+    --border: #2A2A2A;
+    --accent: #00FF88;
+    --accent-dim: rgba(0,255,136,0.1);
+    --accent-mid: rgba(0,255,136,0.3);
+    --warn: #FFB800;
+    --warn-dim: rgba(255,184,0,0.1);
+    --danger: #FF4444;
+    --danger-dim: rgba(255,68,68,0.1);
+    --text: #F0F0F0;
+    --text-dim: #888;
+    --text-dimmer: #444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inconsolata', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow top */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(0,255,136,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 0 12px rgba(0,255,136,0.3);
+  }
+
+  .logo-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  .logo-name span { color: var(--accent); }
+
+  .status-dot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Tabs */
+  .tabs {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 1rem;
+    background: none;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* Main */
+  .main {
+    position: relative;
+    z-index: 10;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scanner panel */
+  .scan-zone {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .scan-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent-dim);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .scan-zone:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(0,255,136,0.1);
+  }
+
+  .scan-zone:hover::before { opacity: 1; }
+
+  .scan-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(0,255,136,0.5));
+  }
+
+  .scan-zone h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .scan-zone p {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .scan-zone p strong { color: var(--accent); }
+
+  #barcode-input { display: none; }
+
+  /* Manual barcode input */
+  .manual-input-wrap {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .manual-input {
+    flex: 1;
+    padding: 0.85rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.9rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .manual-input:focus { border-color: var(--accent); }
+  .manual-input::placeholder { color: var(--text-dimmer); }
+
+  .search-btn {
+    padding: 0.85rem 1.25rem;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover { background: #00cc6a; box-shadow: 0 0 20px rgba(0,255,136,0.4); }
+  .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Result card */
+  .result-card {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .result-card.show { display: block; }
+
+  .result-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .result-verdict {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .result-info { flex: 1; }
+
+  .result-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+
+  .result-brand {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  .verdict-badge {
+    padding: 0.4rem 0.9rem;
+    border-radius: 100px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  .verdict-safe { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-mid); }
+  .verdict-warn { background: var(--warn-dim); color: var(--warn); border: 1px solid rgba(255,184,0,0.3); }
+  .verdict-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(255,68,68,0.3); }
+
+  .result-body { padding: 1.25rem 1.5rem; }
+
+  .ai-analysis {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .ai-analysis-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  /* Ingredient sections */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .ingredient-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tag {
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-family: 'Inconsolata', monospace;
+  }
+
+  .tag-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(255,68,68,0.2); }
+  .tag-warn { background: var(--warn-dim); color: var(--warn); border: 1px solid rgba(255,184,0,0.2); }
+  .tag-safe { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-mid); }
+
+  /* Loading */
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  .loading.show { display: block; }
+
+  .loader {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+    box-shadow: 0 0 10px rgba(0,255,136,0.2);
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Translator panel */
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .lang-btn {
+    padding: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .lang-btn:hover { border-color: var(--accent); color: var(--text); }
+  .lang-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+  .translate-result {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .translate-result.show { display: block; }
+
+  .translate-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .translate-card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .translate-card-header h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .copy-btn {
+    padding: 0.35rem 0.8rem;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-mid);
+    border-radius: 6px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+
+  .copy-btn:hover { background: var(--accent); color: #000; }
+
+  .translate-section {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .translate-section:last-child { border-bottom: none; }
+
+  .translate-section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dimmer);
+    margin-bottom: 0.6rem;
+  }
+
+  .translate-phrase {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .translate-note {
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    color: var(--warn);
+    line-height: 1.5;
+  }
+
+  .info-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .info-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+  }
+
+  .info-block-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-block-title.danger { color: var(--danger); }
+  .info-block-title.warn { color: var(--warn); }
+  .info-block-title.safe { color: var(--accent); }
+
+  .info-block p {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .info-block ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 0.4rem;
+  }
+
+  .info-block ul li {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .info-block ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--text-dimmer);
+  }
+
+  /* Section header */
+  .section-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  .section-header p {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  /* Image preview */
+  .img-preview {
+    display: none;
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+  }
+
+  .img-preview.show { display: block; }
+
+  /* Disclaimer */
+  .disclaimer {
+    text-align: center;
+    font-size: 0.68rem;
+    color: var(--text-dimmer);
+    padding: 1rem 2rem 2rem;
+    position: relative;
+    z-index: 10;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">⬡</div>
+    <div class="logo-name">Celiac<span>Scan</span></div>
+  </div>
+  <div class="status-dot">
+    <div class="dot"></div>
+    Sistema attivo
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('scanner', this)">◈ Scanner</button>
+  <button class="tab" onclick="switchTab('translator', this)">◎ Traduttore</button>
+</div>
+
+<div class="main">
+
+  <!-- SCANNER PANEL -->
+  <div class="panel active" id="panel-scanner">
+
+    <div class="section-header">
+      <h2>Scanner prodotti</h2>
+      <p>Scansiona il barcode o carica la foto — analisi completa degli ingredienti per celiaci</p>
+    </div>
+
+    <!-- Scan zone -->
+    <div class="scan-zone" onclick="document.getElementById('barcode-input').click()">
+      <span class="scan-icon">📷</span>
+      <h2>Scansiona o carica foto</h2>
+      <p>Foto del <strong>barcode</strong> o degli <strong>ingredienti</strong><br>Il sistema analizza tutto automaticamente</p>
+    </div>
+    <input type="file" id="barcode-input" accept="image/*" onchange="handleImage(this)">
+
+    <!-- Manual barcode -->
+    <div class="manual-input-wrap">
+      <input type="text" class="manual-input" id="barcode-text" placeholder="Oppure inserisci il codice a barre manualmente (es. 8001120895325)" inputmode="numeric">
+      <button class="search-btn" onclick="searchByBarcode()">Cerca</button>
+    </div>
+
+    <!-- Image preview -->
+    <img class="img-preview" id="img-preview" src="" alt="Prodotto">
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+      <div class="loader"></div>
+      Analisi ingredienti in corso...
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="result-card">
+      <div class="result-header">
+        <div class="result-verdict" id="result-verdict">✅</div>
+        <div class="result-info">
+          <div class="result-name" id="result-name">Prodotto</div>
+          <div class="result-brand" id="result-brand">Marca</div>
+        </div>
+        <div class="verdict-badge" id="verdict-badge">Sicuro</div>
+      </div>
+      <div class="result-body">
+        <div class="ai-analysis">
+          <div class="ai-analysis-title">⬡ Analisi AI</div>
+          <div id="ai-text"></div>
+        </div>
+        <div id="ingredients-sections"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRANSLATOR PANEL -->
+  <div class="panel" id="panel-translator">
+
+    <div class="section-header">
+      <h2>Traduttore celiaco</h2>
+      <p>Spiega la celiachia al cameriere nella sua lingua — con avvisi specifici per ogni cucina</p>
+    </div>
+
+    <div class="lang-grid">
+      <button class="lang-btn" onclick="translate('inglese', this)">🇬🇧 Inglese</button>
+      <button class="lang-btn" onclick="translate('spagnolo', this)">🇪🇸 Spagnolo</button>
+      <button class="lang-btn" onclick="translate('francese', this)">🇫🇷 Francese</button>
+      <button class="lang-btn" onclick="translate('tedesco', this)">🇩🇪 Tedesco</button>
+      <button class="lang-btn" onclick="translate('giapponese', this)">🇯🇵 Giapponese</button>
+      <button class="lang-btn" onclick="translate('cinese', this)">🇨🇳 Cinese</button>
+      <button class="lang-btn" onclick="translate('lituano', this)">🇱🇹 Lituano</button>
+      <button class="lang-btn" onclick="translate('portoghese', this)">🇵🇹 Portoghese</button>
+      <button class="lang-btn" onclick="translate('arabo', this)">🇸🇦 Arabo</button>
+      <button class="lang-btn" onclick="translate('russo', this)">🇷🇺 Russo</button>
+    </div>
+
+    <div class="translate-result" id="translate-result">
+      <div class="translate-card">
+        <div class="translate-card-header">
+          <h3 id="translate-lang-title">Frase principale</h3>
+          <button class="copy-btn" onclick="copyPhrase()">Copia</button>
+        </div>
+        <div class="translate-section">
+          <div class="translate-section-label">Mostra questa frase al cameriere</div>
+          <div class="translate-phrase" id="translate-phrase"></div>
+        </div>
+        <div class="translate-section">
+          <div class="translate-section-label">⚠️ Attenzione specifica per questa cucina</div>
+          <div class="translate-phrase" id="translate-warning" style="color: var(--warn); font-size:0.85rem;"></div>
+        </div>
+        <div class="translate-section" id="translate-avoid-section">
+          <div class="translate-section-label">❌ Ingredienti da evitare sempre in questa cucina</div>
+          <div id="translate-avoid"></div>
+        </div>
+      </div>
+
+      <div class="info-blocks">
+        <div class="info-block">
+          <div class="info-block-title danger">❌ Cos'è la celiachia</div>
+          <p>La celiachia è una malattia autoimmune permanente. Anche una piccola quantità di glutine (20ppm) danneggia l'intestino — non è una preferenza alimentare, è una necessità medica.</p>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title warn">⚠️ Contaminazione crociata</div>
+          <p>Non basta un piatto senza glutine — servono:</p>
+          <ul>
+            <li>Utensili puliti e separati</li>
+            <li>Superfici pulite non contaminate da farina</li>
+            <li>Olio di frittura non condiviso con prodotti impanati</li>
+            <li>Acqua di cottura pasta separata</li>
+            <li>Mani lavate dopo aver maneggiato prodotti con glutine</li>
+          </ul>
+        </div>
+        <div class="info-block">
+          <div class="info-block-title safe">✓ Cereali sempre sicuri</div>
+          <p>Riso, mais, patate, quinoa, amaranto, grano saraceno, miglio, sorgo, teff — naturalmente privi di glutine.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="disclaimer">
+  ⚠️ CeliacScan è uno strumento di supporto. Verifica sempre le etichette originali e consulta il tuo medico.<br>
+  Dati prodotti: OpenFoodFacts (open source). Analisi: AI — non sostituisce una diagnosi medica.
+</div>
+
+<script>
+// ─── Config ──────────────────────────────────────────────────
+const BACKEND = "";
+
+// ─── Tab switching ───────────────────────────────────────────
+function switchTab(panel, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + panel).classList.add('active');
+}
+
+// ─── Scanner ─────────────────────────────────────────────────
+function handleImage(input) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+
+  // Show preview
+  const preview = document.getElementById('img-preview');
+  preview.src = URL.createObjectURL(file);
+  preview.classList.add('show');
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result.split(',')[1];
+    const mediaType = file.type;
+    await analyzeWithAI(null, base64, mediaType);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function searchByBarcode() {
+  const code = document.getElementById('barcode-text').value.trim();
+  if (!code) return;
+  document.getElementById('img-preview').classList.remove('show');
+  await analyzeWithAI(code, null, null);
+}
+
+document.getElementById('barcode-text').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') searchByBarcode();
+});
+
+async function analyzeWithAI(barcode, imageBase64, mediaType) {
+  const loading = document.getElementById('loading');
+  const resultCard = document.getElementById('result-card');
+
+  loading.classList.add('show');
+  resultCard.classList.remove('show');
+
+  try {
+    let productData = null;
+    let ingredientText = '';
+
+    // Step 1: Se barcode, cerca su OpenFoodFacts
+    if (barcode) {
+      productData = await fetchOpenFoodFacts(barcode);
+      if (productData) {
+        ingredientText = productData.ingredients_text || '';
+      }
+    }
+
+    // Step 2: Analisi AI
+    const result = await callBackendScan(barcode, imageBase64, mediaType, productData);
+
+    loading.classList.remove('show');
+    renderResult(result, productData);
+
+  } catch (err) {
+    loading.classList.remove('show');
+    renderError('Errore durante l\'analisi. Riprova.');
+  }
+}
+
+async function fetchOpenFoodFacts(barcode) {
+  try {
+    const resp = await fetch(
+      `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`
+    );
+    const data = await resp.json();
+    if (data.status === 1) {
+      return data.product;
+    }
+  } catch (e) {
+    console.log('OpenFoodFacts error:', e);
+  }
+  return null;
+}
+
+async function callBackendScan(barcode, imageBase64, mediaType, productData) {
+  const resp = await fetch(`${BACKEND}/scan`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      barcode,
+      image: imageBase64,
+      media_type: mediaType,
+      product_data: productData ? {
+        name: productData.product_name || '',
+        brand: productData.brands || '',
+        ingredients: productData.ingredients_text || '',
+        labels: productData.labels || '',
+        allergens: productData.allergens || ''
+      } : null
+    })
+  });
+  return await resp.json();
+}
+
+function renderResult(data, productData) {
+  const card = document.getElementById('result-card');
+
+  // Header
+  const name = data.prodotto || productData?.product_name || 'Prodotto analizzato';
+  const brand = data.marca || productData?.brands || '';
+  document.getElementById('result-name').textContent = name;
+  document.getElementById('result-brand').textContent = brand;
+
+  // Verdict
+  const verdictEl = document.getElementById('result-verdict');
+  const badgeEl = document.getElementById('verdict-badge');
+
+  if (data.sicuro === true) {
+    verdictEl.textContent = '✅';
+    badgeEl.textContent = '100% Sicuro';
+    badgeEl.className = 'verdict-badge verdict-safe';
+  } else if (data.livello === 'giallo') {
+    verdictEl.textContent = '⚠️';
+    badgeEl.textContent = 'Attenzione';
+    badgeEl.className = 'verdict-badge verdict-warn';
+  } else {
+    verdictEl.textContent = '❌';
+    badgeEl.textContent = 'Non sicuro';
+    badgeEl.className = 'verdict-badge verdict-danger';
+  }
+
+  // AI analysis
+  document.getElementById('ai-text').textContent = data.analisi || data.consiglio || '';
+
+  // Ingredients sections
+  const sections = document.getElementById('ingredients-sections');
+  sections.innerHTML = '';
+
+  if (data.ingredienti_pericolosi?.length) {
+    sections.innerHTML += `
+      <div class="section-title">❌ Contengono glutine</div>
+      <div class="ingredient-tags">
+        ${data.ingredienti_pericolosi.map(i => `<span class="tag tag-danger">${i}</span>`).join('')}
+      </div>`;
+  }
+
+  if (data.ingredienti_sospetti?.length) {
+    sections.innerHTML += `
+      <div class="section-title">⚠️ Sospetti o ambigui</div>
+      <div class="ingredient-tags">
+        ${data.ingredienti_sospetti.map(i => `<span class="tag tag-warn">${i}</span>`).join('')}
+      </div>`;
+  }
+
+  if (data.conservanti_rischiosi?.length) {
+    sections.innerHTML += `
+      <div class="section-title">⚠️ Conservanti/coloranti da verificare</div>
+      <div class="ingredient-tags">
+        ${data.conservanti_rischiosi.map(i => `<span class="tag tag-warn">${i}</span>`).join('')}
+      </div>`;
+  }
+
+  if (data.ingredienti_sicuri?.length) {
+    sections.innerHTML += `
+      <div class="section-title">✓ Ingredienti sicuri</div>
+      <div class="ingredient-tags">
+        ${data.ingredienti_sicuri.map(i => `<span class="tag tag-safe">${i}</span>`).join('')}
+      </div>`;
+  }
+
+  if (data.avviso_contaminazione) {
+    sections.innerHTML += `
+      <div style="margin-top:1rem;padding:0.75rem 1rem;background:var(--warn-dim);border:1px solid rgba(255,184,0,0.2);border-radius:8px;font-size:0.82rem;color:var(--warn)">
+        ⚠️ ${data.avviso_contaminazione}
+      </div>`;
+  }
+
+  card.classList.add('show');
+}
+
+function renderError(msg) {
+  const card = document.getElementById('result-card');
+  document.getElementById('result-verdict').textContent = '⚠️';
+  document.getElementById('result-name').textContent = msg;
+  document.getElementById('result-brand').textContent = '';
+  document.getElementById('verdict-badge').textContent = 'Errore';
+  document.getElementById('verdict-badge').className = 'verdict-badge verdict-warn';
+  document.getElementById('ai-text').textContent = 'Assicurati che il backend Railway sia attivo e riprova.';
+  document.getElementById('ingredients-sections').innerHTML = '';
+  card.classList.add('show');
+}
+
+// ─── Translator ───────────────────────────────────────────────
+const TRANSLATIONS = {
+  inglese: {
+    title: "🇬🇧 English",
+    phrase: "I have celiac disease. I cannot eat gluten — not even traces. Please ensure there is no cross-contamination with wheat, barley, rye, or oats. I need separate utensils and clean surfaces.",
+    warning: "⚠️ UK/US cuisine: Watch out for hidden gluten in sauces, gravies, and 'modified starch'. Always ask if flour is used as a thickener.",
+    avoid: ["Wheat flour", "Barley malt", "Rye", "Regular soy sauce", "Beer batter", "Modified starch (if unspecified)"]
+  },
+  spagnolo: {
+    title: "🇪🇸 Español",
+    phrase: "Tengo enfermedad celíaca. No puedo comer gluten, ni siquiera trazas. Por favor, asegúrese de que no haya contaminación cruzada con trigo, cebada o centeno. Necesito utensilios separados y superficies limpias.",
+    warning: "⚠️ Cucina spagnola: Attenzione alla salsa romesco (può contenere pane), croquetas, empanadas e molte salse addensate con farina. Il chorizo è generalmente sicuro ma verificare.",
+    avoid: ["Harina de trigo", "Cebada", "Pan rallado", "Salsa de soja", "Cerveza", "Almidón modificado"]
+  },
+  francese: {
+    title: "🇫🇷 Français",
+    phrase: "J'ai la maladie coeliaque. Je ne peux pas manger de gluten, même en traces infimes. Merci de vous assurer qu'il n'y a pas de contamination croisée avec le blé, l'orge ou le seigle. J'ai besoin d'ustensiles séparés.",
+    warning: "⚠️ Cucina francese: Attenzione alla béchamel (farina di grano), molte salse addensate con roux, croissant e pane. Il foie gras è spesso servito con pan brioche.",
+    avoid: ["Farine de blé", "Orge", "Seigle", "Béchamel classique", "Roux", "Pain"]
+  },
+  tedesco: {
+    title: "🇩🇪 Deutsch",
+    phrase: "Ich habe Zöliakie. Ich kann kein Gluten essen, auch keine Spuren. Bitte stellen Sie sicher, dass keine Kreuzkontamination mit Weizen, Gerste oder Roggen stattfindet. Ich brauche sauberes, separates Besteck.",
+    warning: "⚠️ Cucina tedesca: ALTA ATTENZIONE. Pane di segale, würstel (spesso contengono filler), birra, bretzel, knödel (gnocchi di pane), schnitzel impanato sono ovunque.",
+    avoid: ["Weizen", "Roggen", "Gerste", "Malz", "Paniermehl", "Bier", "Semmelknödel"]
+  },
+  giapponese: {
+    title: "🇯🇵 日本語",
+    phrase: "私はセリアック病です。グルテンは微量でも食べられません。小麦、大麦、ライ麦との交差汚染がないようにしてください。別の調理器具と清潔な調理台が必要です。",
+    warning: "⚠️ Cucina giapponese: PERICOLO PRINCIPALE è la salsa di soia (shoyu) — contiene frumento. Porta con te la salsa tamari (GF). Evita tempura, ramen, udon, soba di grano. Il miso può contenere orzo.",
+    avoid: ["醤油 (salsa di soia)", "天ぷら (tempura)", "ラーメン (ramen)", "うどん (udon)", "小麦粉 (farina di frumento)", "麦味噌 (miso d'orzo)"]
+  },
+  cinese: {
+    title: "🇨🇳 中文",
+    phrase: "我有乳糜泻。我不能吃麸质，哪怕是微量的。请确保没有与小麦、大麦、黑麦的交叉污染。我需要单独的餐具和干净的烹饪表面。",
+    warning: "⚠️ Cucina cinese: ATTENZIONE MASSIMA. Quasi tutte le salse cinesi contengono soia con frumento. La salsa di ostriche, hoisin, salsa XO contengono glutine. I noodles sono quasi sempre di grano.",
+    avoid: ["酱油 (salsa di soia)", "面条 (noodles di grano)", "饺子皮 (pasta ravioli)", "蚝油 (salsa ostriche)", "海鲜酱 (salsa hoisin)", "小麦淀粉 (amido di frumento)"]
+  },
+  lituano: {
+    title: "🇱🇹 Lietuvių",
+    phrase: "Aš sergu celiakija. Negaliu valgyti glitimo, net mažiausių kiekių. Prašau užtikrinti, kad nebūtų kryžminio užteršimo su kviečiais, miežiais ar rugiais. Man reikia atskirų indų ir švarių paviršių.",
+    warning: "⚠️ Cucina lituana/baltica: Attenzione al pane di segale (labai populiarus), cepelinai (zeppelin) fatti con farina, birra locale. Lo šaltibarščiai (zuppa di barbabietola) è generalmente sicuro.",
+    avoid: ["Kvietiniai miltai (farina)", "Rugiai (segale)", "Miežiai (orzo)", "Alus (birra)", "Duona (pane)", "Košė su miežiais (orzo)"]
+  },
+  portoghese: {
+    title: "🇵🇹 Português",
+    phrase: "Tenho doença celíaca. Não posso comer glúten, nem mesmo traços. Por favor, certifique-se de que não há contaminação cruzada com trigo, cevada ou centeio. Preciso de utensílios separados e superfícies limpas.",
+    warning: "⚠️ Cucina portoghese/brasiliana: Attenzione ai pastéis (fritti impanati), coxinha, pão de queijo (il vero è GF ma verificare), molte fritture. Il bacalhau alla griglia è generalmente sicuro.",
+    avoid: ["Farinha de trigo", "Cevada", "Centeio", "Molho de soja", "Pão ralado", "Cerveja"]
+  },
+  arabo: {
+    title: "🇸🇦 العربية",
+    phrase: "أعاني من مرض الاضطرابات الهضمية. لا أستطيع تناول الغلوتين، ولا حتى كميات ضئيلة منه. يرجى التأكد من عدم وجود تلوث متقاطع مع القمح أو الشعير أو الجاودار. أحتاج إلى أدوات منفصلة وأسطح نظيفة.",
+    warning: "⚠️ Cucina mediorientale/araba: Attenzione al bulgur (contiene glutine), couscous, pita, fattoush (con pane fritto), molte pastelle fritte. L'hummus puro e il riso sono sicuri.",
+    avoid: ["القمح (grano)", "البرغل (bulgur)", "الكسكس (couscous)", "صلصة الصويا (soia)", "الخبز (pane)", "البيرة (birra)"]
+  },
+  russo: {
+    title: "🇷🇺 Русский",
+    phrase: "У меня целиакия. Я не могу есть глютен — даже в следовых количествах. Пожалуйста, убедитесь в отсутствии перекрёстного заражения с пшеницей, ячменём или рожью. Мне нужны отдельные приборы и чистые поверхности.",
+    warning: "⚠️ Cucina russa: Attenzione ai pelmeni (ravioli di grano), blini (pancakes di farina), pirozhki (pasticcini ripieni), kasha di grano saraceno (la sola senza glutine). La birra russa contiene glutine.",
+    avoid: ["Пшеница (grano)", "Ячмень (orzo)", "Рожь (segale)", "Пельмени (ravioli)", "Блины (blini)", "Пиво (birra)"]
+  }
+};
+
+function translate(lang, btn) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const data = TRANSLATIONS[lang];
+  if (!data) return;
+
+  document.getElementById('translate-lang-title').textContent = data.title;
+  document.getElementById('translate-phrase').textContent = data.phrase;
+  document.getElementById('translate-warning').textContent = data.warning;
+
+  const avoidEl = document.getElementById('translate-avoid');
+  avoidEl.innerHTML = data.avoid.map(item =>
+    `<span class="tag tag-danger" style="margin:0.2rem">${item}</span>`
+  ).join('');
+
+  document.getElementById('translate-result').classList.add('show');
+}
+
+function copyPhrase() {
+  const text = document.getElementById('translate-phrase').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ Copiato';
+    setTimeout(() => { btn.textContent = 'Copia'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
