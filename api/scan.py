@@ -81,11 +81,19 @@ Solo JSON, nessun altro testo."""
             data = json.loads(resp.read())
             text = data["choices"][0]["message"]["content"]
             clean = text.replace("```json", "").replace("```", "").strip()
-            start = clean.find('{')
-            end = clean.rfind('}') + 1
-            if start >= 0 and end > start:
-                clean = clean[start:end]
-            return json.loads(clean)
+start = clean.find('{')
+end = clean.rfind('}') + 1
+if start >= 0 and end > start:
+    clean = clean[start:end]
+parsed = json.loads(clean)
+# Assicura che tutti i campi esistano
+parsed.setdefault("analisi", "Analisi completata.")
+parsed.setdefault("ingredienti_pericolosi", [])
+parsed.setdefault("ingredienti_sospetti", [])
+parsed.setdefault("conservanti_rischiosi", [])
+parsed.setdefault("ingredienti_sicuri", [])
+parsed.setdefault("avviso_contaminazione", None)
+return parsed
 
     except Exception as e:
         return {"error": str(e)}
