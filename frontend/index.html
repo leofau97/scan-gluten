@@ -832,7 +832,7 @@ async function fetchOpenFoodFacts(barcode) {
 }
 
 async function callBackendScan(barcode, imageBase64, mediaType, productData) {
-  const resp = await fetch(`${BACKEND}/scan`, {
+  const resp = await fetch(`${BACKEND}/api/scan`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
